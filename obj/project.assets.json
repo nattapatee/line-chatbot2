@@ -1576,6 +1576,18 @@
           "lib/netstandard1.3/Microsoft.CodeAnalysis.Workspaces.dll": {}
         }
       },
+      "Microsoft.Cognitive.LUIS/2.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Cognitive.LUIS.dll": {}
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/Microsoft.Cognitive.LUIS.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.4.0": {
         "type": "package",
         "compile": {
@@ -6171,6 +6183,16 @@
         "lib/netstandard1.3/Microsoft.CodeAnalysis.Workspaces.xml",
         "microsoft.codeanalysis.workspaces.common.2.3.1.nupkg.sha512",
         "microsoft.codeanalysis.workspaces.common.nuspec"
+      ]
+    },
+    "Microsoft.Cognitive.LUIS/2.0.2": {
+      "sha512": "N3YDPIwmQvPrLRvf9AjQHLUALzGKKMzamjC5WSQEmHpASdnIlbt+8sNGSx7Rl5CPtbCeUY+29TynAFoycCpftQ==",
+      "type": "package",
+      "path": "microsoft.cognitive.luis/2.0.2",
+      "files": [
+        "lib/portable45-net45+win8+wpa81/Microsoft.Cognitive.LUIS.dll",
+        "microsoft.cognitive.luis.2.0.2.nupkg.sha512",
+        "microsoft.cognitive.luis.nuspec"
       ]
     },
     "Microsoft.CSharp/4.4.0": {
@@ -13206,7 +13228,8 @@
       "Microsoft.AspNetCore.All >= 2.0.3",
       "Microsoft.NETCore.App >= 2.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.0.0",
-      "System.Configuration.ConfigurationManager >= 4.4.1"
+      "System.Configuration.ConfigurationManager >= 4.4.1",
+      "microsoft.cognitive.luis >= 2.0.2"
     ]
   },
   "packageFolders": {
@@ -13216,11 +13239,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/centrallogerbot.csproj",
+      "projectUniqueName": "/Users/bcircle/src/clone/central-logger/src/centrallogerbot/centrallogerbot.csproj",
       "projectName": "centrallogerbot",
-      "projectPath": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/centrallogerbot.csproj",
+      "projectPath": "/Users/bcircle/src/clone/central-logger/src/centrallogerbot/centrallogerbot.csproj",
       "packagesPath": "/Users/bcircle/.nuget/packages/",
-      "outputPath": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/obj/",
+      "outputPath": "/Users/bcircle/src/clone/central-logger/src/centrallogerbot/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
@@ -13268,6 +13291,10 @@
           "System.Configuration.ConfigurationManager": {
             "target": "Package",
             "version": "[4.4.1, )"
+          },
+          "microsoft.cognitive.luis": {
+            "target": "Package",
+            "version": "[2.0.2, )"
           }
         },
         "imports": [
@@ -13277,5 +13304,17 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Cognitive.LUIS 2.0.2' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Cognitive.LUIS",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    }
+  ]
 }
