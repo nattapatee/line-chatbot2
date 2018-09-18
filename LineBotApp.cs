@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using contosoburgerbot.CloudStorage;
-using contosoburgerbot.Models;
+using centrallogerbot.CloudStorage;
+using centrallogerbot.Models;
 
-namespace contosoburgerbot
+namespace centrallogerbot
 {
     internal class LineBotApp : WebhookApplication
     {

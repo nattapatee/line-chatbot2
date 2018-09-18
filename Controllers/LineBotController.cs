@@ -27,7 +27,7 @@ namespace centrallogerbot.Controllers
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]JToken req)
-        { 
+        {
             var events = WebhookEventParser.Parse(req.ToString());
             var connectionString = appsettings.LineSettings.StorageConnectionString;
             var blobStorage = await BlobStorage.CreateAsync(connectionString, "linebotcontainer");
