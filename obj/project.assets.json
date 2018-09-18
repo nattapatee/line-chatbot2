@@ -13216,11 +13216,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/bcircle/src/clone/centrallogerbot/centrallogerbot.csproj",
+      "projectUniqueName": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/centrallogerbot.csproj",
       "projectName": "centrallogerbot",
-      "projectPath": "/Users/bcircle/src/clone/centrallogerbot/centrallogerbot.csproj",
+      "projectPath": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/centrallogerbot.csproj",
       "packagesPath": "/Users/bcircle/.nuget/packages/",
-      "outputPath": "/Users/bcircle/src/clone/centrallogerbot/obj/",
+      "outputPath": "/Users/bcircle/src/clone/myfirstbot/centrallogerbot/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
