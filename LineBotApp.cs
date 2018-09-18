@@ -43,13 +43,12 @@ namespace centrallogerbot
             if (userMessage == "เสมา")
             {
                 replyMessage.Text = "สาสสส";
-                replyMessage.Text = "สาสสส";
-                replyMessage.Text = "สาสสส";
-                replyMessage.Text = "สาสสส";
-                replyMessage.Text = "สาสสส";
-                replyMessage.Text = "สาสสส";
             }
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
+            await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
+
+            await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
+
         }
     }
 }
