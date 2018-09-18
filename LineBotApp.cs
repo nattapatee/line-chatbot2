@@ -35,13 +35,18 @@ namespace centrallogerbot
 
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            var replyMessage = new TextMessage($"คุณฑิมว่า: {userMessage}");
+            var replyMessage = new TextMessage($"คุณพิมว่า: {userMessage}");
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage.Text = "Hi!!";
             }
             if (userMessage == "เสมา")
             {
+                replyMessage.Text = "สาสสส";
+                replyMessage.Text = "สาสสส";
+                replyMessage.Text = "สาสสส";
+                replyMessage.Text = "สาสสส";
+                replyMessage.Text = "สาสสส";
                 replyMessage.Text = "สาสสส";
             }
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
