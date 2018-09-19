@@ -35,12 +35,12 @@ namespace centrallogerbot
 
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            var replyMessage = new TextMessage($"คุณพิมว่า: {userMessage}");
+            var replyMessage = new TextMessage($"{userMessage}");
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage.Text = "Hi!!";
             }
-            if (userMessage == "เสมา")
+            if (userMessage == "register")
             {
                 replyMessage.Text = userId;
             }
