@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using centrallogerbot.Models;
-using centrallogerbot.Middleware;
+using centralloggerbot.Models;
+using centralloggerbot.Middleware;
 using Microsoft.AspNetCore.Http.Internal;
 
-namespace centrallogerbot
+namespace centralloggerbot
 {
     public class Startup
     {

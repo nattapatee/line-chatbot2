@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 
-namespace centrallogerbot.Middleware
+namespace centralloggerbot.Middleware
 {
     public static class MiddlewareExtensions
     {

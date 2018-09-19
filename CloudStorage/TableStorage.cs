@@ -2,7 +2,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
 
-namespace centrallogerbot.CloudStorage
+namespace centralloggerbot.CloudStorage
 {
 
     public class TableStorage<T> where T : TableEntity, new()

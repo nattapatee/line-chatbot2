@@ -1,4 +1,4 @@
-namespace centrallogerbot.Models
+namespace centralloggerbot.Models
 {
     public class AppSettings
     {

@@ -1,6 +1,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace centrallogerbot.Models
+namespace centralloggerbot.Models
 {
     public class EventSourceLocation : EventSourceState
     {

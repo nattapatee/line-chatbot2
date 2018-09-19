@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace centrallogerbot.Middleware
+namespace centralloggerbot.Middleware
 {
     /// <summary>
     /// Verify if the request is valid, then returns LINE Webhook events from the request.
