@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace centralloggerbot.Controllers
 {
