@@ -36,7 +36,7 @@ namespace centralloggerbot.Controllers
             var blobStorage = await BlobStorage.CreateAsync(connectionString, "linebotcontainer");
             var eventSourceState = await TableStorage<EventSourceState>.CreateAsync(connectionString, "eventsourcestate");
 
-            var app = new LineBotApp(db, lineMessagingClient, eventSourceState, blobStorage);
+            var app = new LineBotApp(lineMessagingClient, eventSourceState, blobStorage);
             await app.RunAsync(events);
             return new OkResult();
         }
