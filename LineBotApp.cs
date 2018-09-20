@@ -43,7 +43,6 @@ namespace centralloggerbot
             {
                 replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
             }
-
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
         }
     }
