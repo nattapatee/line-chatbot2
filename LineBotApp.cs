@@ -43,11 +43,6 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "register")
             {
-                var message = new
-                {
-                    LineId = userId
-                };
-
                 replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
             }
 
