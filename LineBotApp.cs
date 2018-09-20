@@ -7,6 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace centralloggerbot
 {
@@ -41,9 +44,14 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "register")
             {
-                var message = new {
+                var message = new
+                {
                     LineId = userId
                 };
+                var client = new HttpClient();
+                var data = JsonConvert.SerializeObject(message);
+                var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/logger/AddLine";
+                var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
                 replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
             }
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
