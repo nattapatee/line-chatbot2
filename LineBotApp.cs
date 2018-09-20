@@ -43,6 +43,8 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "register")
             {
+                replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                /* 
                 var message = new Users
                 {
                     LineId = userId
@@ -61,11 +63,10 @@ namespace centralloggerbot
                         replyMessage.Text = "พบปัญหาในการสมัครรับข้อมูล";
                     }
                     }*/
-                    replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
-                }
-
-                await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
             }
+
+            await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
         }
     }
+}
 }
