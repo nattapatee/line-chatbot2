@@ -7,6 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
+using System.Text;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace centralloggerbot
 {
@@ -15,11 +18,8 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
-        private readonly DbCreateContext db;
-
-        public LineBotApp(DbCreateContext db, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
+        public LineBotApp(LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
-            this.db = db;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
@@ -43,24 +43,29 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "register")
             {
-                var idlist = db.Users.Where(m => m.LineId == userId).Select(m => m.LineId).FirstOrDefault();
-                if (idlist != userId && userId != null)
+                var message = new Users
                 {
-                    db.Users.Add(new Users()
+                    LineId = userId
+                };
+                using (var client = new HttpClient())
+                {/* 
+                    var data = JsonConvert.SerializeObject(message);
+                    var fullUrl = $"htps://localhost:5000/api/logger/addLine";
+                    var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+                    if ((int)response.StatusCode == 200)
                     {
-                        LineId = userId
-                    });
-                    db.SaveChanges();
+                        replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                    }
+                    else
+                    {
+                        replyMessage.Text = "พบปัญหาในการสมัครรับข้อมูล";
+                    }*/
                     replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
                 }
-                else
-                {
-                    replyMessage.Text = "พบข้อผิดพลาด ไอดีนี้การลงทะเบียนอยู่แล้ว";
-                }
-
             }
 
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
         }
     }
+}
 }
