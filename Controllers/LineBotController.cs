@@ -9,6 +9,7 @@ using centralloggerbot.Models;
 
 namespace centralloggerbot.Controllers
 {
+
     [Produces("application/json")]
     [Route("api/[controller]")]
     public class LineBotController : Controller
