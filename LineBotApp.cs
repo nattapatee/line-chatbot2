@@ -50,7 +50,7 @@ namespace centralloggerbot
                 };
                 var client = new HttpClient();
                 var data = JsonConvert.SerializeObject(message);
-                var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/logger/AddLine";
+                var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
                 var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
                 if (response.IsSuccessStatusCode)
                 {
