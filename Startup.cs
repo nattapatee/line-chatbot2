@@ -28,7 +28,6 @@ namespace centralloggerbot
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetValue("ConnectionString", "");
-            services.AddDbContext<DbCreateContext>(options => options.UseNpgsql(connectionString));
             services.AddMvc();
             services.Configure<AppSettings>(Configuration);
         }
@@ -36,8 +35,6 @@ namespace centralloggerbot
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, DbCreateContext db)
         {
-            Console.WriteLine("Create DB");
-            db.Database.EnsureCreated();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

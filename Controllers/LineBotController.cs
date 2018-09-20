@@ -15,11 +15,9 @@ namespace centralloggerbot.Controllers
     public class LineBotController : Controller
     {
         private static LineMessagingClient lineMessagingClient;
-        private readonly DbCreateContext db;
         AppSettings appsettings;
-        public LineBotController(IOptions<AppSettings> options, DbCreateContext db)
+        public LineBotController(IOptions<AppSettings> options)
         {
-            this.db = db;
             appsettings = options.Value;
             lineMessagingClient = new LineMessagingClient(appsettings.LineSettings.ChannelAccessToken);
         }
