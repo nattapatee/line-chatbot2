@@ -22,7 +22,6 @@ namespace centralloggerbot
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
         }
-
         protected override async Task OnMessageAsync(MessageEvent ev)
         {
             switch (ev.Message.Type)
@@ -39,6 +38,10 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage.Text = "Hi!!";
+            }
+            if (userMessage.ToLower() == "register")
+            {
+                replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
             }
 
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
