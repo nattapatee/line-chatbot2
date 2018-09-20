@@ -7,9 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
-using System.Text;
-using System.Net.Http;
-using Newtonsoft.Json;
 
 namespace centralloggerbot
 {
