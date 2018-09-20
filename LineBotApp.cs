@@ -42,6 +42,10 @@ namespace centralloggerbot
             {
                 replyMessage.Text = "Hi!!";
             }
+            if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
+            {
+                replyMessage.Text = "ว่าไงแสรดดดดด";
+            }
             if (userMessage.ToLower() == "register")
             {
                 var message = new
