@@ -52,7 +52,10 @@ namespace centralloggerbot
                 var data = JsonConvert.SerializeObject(message);
                 var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/logger/AddLine";
                 var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-                replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                if (response.IsSuccessStatusCode)
+                {
+                    replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                }
             }
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
         }
