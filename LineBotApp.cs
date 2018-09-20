@@ -15,9 +15,11 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
+        private readonly DbCreateContext db;
 
-        public LineBotApp(LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
+        public LineBotApp(DbCreateContext db, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
+            this.db = db;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
@@ -41,7 +43,21 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "register")
             {
-                replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                var idlist = db.Users.Where(m => m.LineId == userId).Select(m => m.LineId).FirstOrDefault();
+                if (idlist != userId && userId != null)
+                {
+                    db.Users.Add(new Users()
+                    {
+                        LineId = userId
+                    });
+                    db.SaveChanges();
+                    replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                }
+                else
+                {
+                    replyMessage.Text = "พบข้อผิดพลาด ไอดีนี้การลงทะเบียนอยู่แล้ว";
+                }
+
             }
 
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
