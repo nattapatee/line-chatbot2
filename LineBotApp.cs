@@ -44,6 +44,15 @@ namespace centralloggerbot
             {
                 replyMessage.Text = "Hi!!";
             }
+            if (userMessage.ToLower() == "message")
+            {
+                replyMessage.Text = $"You say{userMessage}";
+            }
+            if (userMessage.ToLower() == "test unit")
+            {
+                var text = userMessage.Substring(0, userMessage.IndexOf(' ') + 1);
+                replyMessage.Text = $"You say{userMessage}";
+            }
             if (userMessage.ToLower() == "text")
             {
                 replyMessage.Text = text;
@@ -69,7 +78,7 @@ namespace centralloggerbot
                     var response2 = await client.PostAsync(fullUrl2, new StringContent(data, Encoding.UTF8, "application/json"));
                     if (response.IsSuccessStatusCode)
                     {
-                        replyMessage.Text = $"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ \n {text}";
+                        replyMessage.Text = $"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
                     }
                     else if ((int)response.StatusCode == 500)
                     {
