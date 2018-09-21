@@ -34,9 +34,26 @@ namespace centralloggerbot
                 case EventMessageType.Text:
                     await HandleTextAsync(ev.ReplyToken, ((TextEventMessage)ev.Message).Text, ev.Source.UserId);
                     break;
+                case EventMessageType.Sticker:
+                    await ReplyRandomStickerAsync(ev.ReplyToken);
+                    break;
             }
         }
+        private async Task ReplyRandomStickerAsync(string replyToken)
+        {
+            //Sticker ID of bssic stickers (packge ID =1)
+            //see https://devdocs.line.me/files/sticker_list.pdf
+            var stickerids = Enumerable.Range(1, 17)
+                .Concat(Enumerable.Range(21, 1))
+                .Concat(Enumerable.Range(100, 139 - 100 + 1))
+                .Concat(Enumerable.Range(401, 430 - 400 + 1)).ToArray();
 
+            var rand = new Random(Guid.NewGuid().GetHashCode());
+            var stickerId = stickerids[rand.Next(stickerids.Length - 1)].ToString();
+            await messagingClient.ReplyMessageAsync(replyToken, new[] {
+                        new StickerMessage("1", stickerId)
+                    });
+        }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
             var replyMessage = new TextMessage($"ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้ ถ้าหากคุณต้องการสมัครการแจ้งเตือน log ให้พิมพ์ว่า  \"sub\" และถ้าหากจะยกเลิกการติดตามให้พิมพ์  \"unsub\" ขอบคุณครับ ");
@@ -51,7 +68,7 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "test unit")
             {
                 var text = userMessage.Substring(0, userMessage.IndexOf(' ') + 1);
-                replyMessage.Text = $"You say{userMessage}";
+                replyMessage.Text = $"You say{text}";
             }
             if (userMessage.ToLower() == "text")
             {
@@ -59,7 +76,7 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
-                replyMessage.Text = "ว่าไงแสรดดดดด";
+                replyMessage.Text = "หวัดเด้";
             }
             if (userMessage.ToLower() == "sub")
             {
