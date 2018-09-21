@@ -37,7 +37,7 @@ namespace centralloggerbot
 
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            var replyMessage = new TextMessage($"You said: {userMessage}");
+            var replyMessage = new TextMessage($"ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าหากคุณต้องการสมัครการแจ้งเตือน log ให้พิมพ์ว่า  \"sub\" และถ้าหากจะยกเลิกการติดตามให้พิมพ์  \"unsub\" ขอบคุณครับ ");
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage.Text = "Hi!!";
