@@ -62,6 +62,11 @@ namespace centralloggerbot
                     {
                         replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
                     }
+                    else if ((int)response.StatusCode == 500)
+                    {
+                        replyMessage.Text = "พบข้อผิดพลาดในการสมัครข้อมูล";
+
+                    }
                 }
                 catch (Exception)
                 {
@@ -83,6 +88,11 @@ namespace centralloggerbot
                     if (response.IsSuccessStatusCode)
                     {
                         replyMessage.Text = "เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ";
+                    }
+                    else if ((int)response.StatusCode == 500)
+                    {
+                        replyMessage.Text = "พบข้อผิดพลาดในการลบ";
+
                     }
                 }
                 catch (Exception)
