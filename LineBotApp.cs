@@ -46,7 +46,7 @@ namespace centralloggerbot
             {
                 replyMessage.Text = "ว่าไงแสรดดดดด";
             }
-            if (userMessage.ToLower() == "register")
+            if (userMessage.ToLower() == "sub")
             {
                 var message = new
                 {
@@ -59,6 +59,21 @@ namespace centralloggerbot
                 if (response.IsSuccessStatusCode)
                 {
                     replyMessage.Text = "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                }
+            }
+            if (userMessage.ToLower() == "unsub")
+            {
+                var message = new
+                {
+                    LineId = userId
+                };
+                var client = new HttpClient();
+                var data = JsonConvert.SerializeObject(message);
+                var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/DeleteLine";
+                var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+                if (response.IsSuccessStatusCode)
+                {
+                    replyMessage.Text = "เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ";
                 }
             }
             await messagingClient.ReplyMessageAsync(replyToken, new List<ISendMessage> { replyMessage });
