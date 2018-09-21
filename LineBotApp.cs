@@ -68,7 +68,7 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "test unit")
             {
                 var text = userMessage.Split(' ')[1];
-                replyMessage.Text = $"You say{text}";
+                replyMessage.Text = $"You say {text}";
             }
             if (userMessage.ToLower() == "text")
             {
