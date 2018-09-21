@@ -18,9 +18,11 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
+        private string text;
 
-        public LineBotApp(LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
+        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
+            this.text = text;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
@@ -41,6 +43,10 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage.Text = "Hi!!";
+            }
+            if (userMessage.ToLower() == "text")
+            {
+                replyMessage.Text = text;
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
