@@ -27,6 +27,28 @@ namespace centralloggerbot
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
         }
+        protected override async Task OnPostbackAsync(PostbackEvent ev)
+        {
+            switch (ev.Postback.Data)
+            {
+                case "Date":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date: " + ev.Postback.Params.Date);
+                    break;
+                case "Time":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the time: " + ev.Postback.Params.Time);
+                    break;
+                case "DateTime":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date-time: " + ev.Postback.Params.DateTime);
+                    break;
+                default:
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "Your postback is " + ev.Postback.Data);
+                    break;
+            }
+        }
         protected override async Task OnMessageAsync(MessageEvent ev)
         {
             switch (ev.Message.Type)
@@ -61,11 +83,39 @@ namespace centralloggerbot
             {
                 replyMessage.Text = "Hi!!";
             }
+            if (userMessage == "addrichmenu")
+            {
+                // Create Rich Menu
+                RichMenu richMenu = new RichMenu()
+                {
+                    Size = ImagemapSize.RichMenuLong,
+                    Selected = false,
+                    Name = "nice richmenu",
+                    ChatBarText = "touch me",
+                    Areas = new List<ActionArea>()
+                    {
+                        new ActionArea()
+                        {
+                            Bounds = new ImagemapArea(0,0 ,ImagemapSize.RichMenuLong.Width,ImagemapSize.RichMenuLong.Height),
+                            Action = new PostbackTemplateAction("ButtonA", "Menu A", "Menu A")
+                        }
+                    }
+                };
+
+                var richMenuId = await messagingClient.CreateRichMenuAsync(richMenu);
+                var image = new MemoryStream(File.ReadAllBytes(@"Images\richmenu.PNG"));
+                // Upload Image
+                await messagingClient.UploadRichMenuPngImageAsync(image, richMenuId);
+                // Link to user
+                await messagingClient.LinkRichMenuToUserAsync(userId, richMenuId);
+
+                replyMessage = new TextMessage("Rich menu added");
+            }
             if (userMessage.ToLower() == "message")
             {
                 replyMessage.Text = $"You say{userMessage}";
             }
-            if (userMessage.ToLower() == "test unit")
+            if (userMessage.ToLower() == "sub app.dll")
             {
                 var text = userMessage.Split(' ')[1];
                 replyMessage.Text = $"You say {text}";
