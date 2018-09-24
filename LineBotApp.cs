@@ -180,8 +180,13 @@ namespace centralloggerbot
                     };
                     var client = new HttpClient();
                     var data = JsonConvert.SerializeObject(message);
-                    var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/DeleteLine";
-                    var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri("https://centralloggerazure.azurewebsites.net/api/line/DeleteLine"),
+                        Content = new StringContent(data, Encoding.UTF8, "application/json")
+                    };
+                    var response = await client.SendAsync(request);
                     if (response.IsSuccessStatusCode)
                     {
                         replyMessage = new TextMessage("เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ");
