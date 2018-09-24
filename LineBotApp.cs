@@ -107,7 +107,15 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "text")
             {
+                var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(url);
+                    var returnJson = await response.Content.ReadAsStringAsync();
+                    var text = returnJson;
+                }
                 replyMessage = new TextMessage(text);
+
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
@@ -124,10 +132,8 @@ namespace centralloggerbot
                     var client = new HttpClient();
                     var data = JsonConvert.SerializeObject(message);
                     var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
-                    var fullUrl2 = $"http://central-logger.azurewebsites.net/api/line/AddLine";
 
                     var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-                    var response2 = await client.PostAsync(fullUrl2, new StringContent(data, Encoding.UTF8, "application/json"));
                     if (response.IsSuccessStatusCode)
                     {
                         replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
