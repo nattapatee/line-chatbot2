@@ -48,6 +48,8 @@ namespace centralloggerbot
                     break;
                 default:
                     await SendLineDb(userId, ev.Postback.Data);
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        $"ขอบคุณที่สมัครข้อมูล{ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                     break;
             }
         }
