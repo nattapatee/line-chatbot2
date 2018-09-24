@@ -12,6 +12,7 @@ using centralloggerbot.Models;
 using centralloggerbot.Middleware;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
+using CentralLogger;
 
 namespace centralloggerbot
 {
@@ -27,8 +28,19 @@ namespace centralloggerbot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetValue("ConnectionString", "");
+            var envConnectionString = Environment.GetEnvironmentVariable("CENTRAL_LOGGER_CS");
+
+            if (!string.IsNullOrEmpty(envConnectionString))
+            {
+                connectionString = envConnectionString;
+            }
+
+            Console.WriteLine($"ConnectionString = {connectionString}");
+
             services.AddMvc();
             services.Configure<AppSettings>(Configuration);
+            services.AddDbContext<CentralLoggerContext>(options => options.UseNpgsql(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

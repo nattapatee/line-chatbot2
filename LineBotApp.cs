@@ -10,6 +10,7 @@ using centralloggerbot.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using CentralLogger;
 
 namespace centralloggerbot
 {
@@ -20,12 +21,38 @@ namespace centralloggerbot
         private BlobStorage blobStorage { get; }
         private string text;
 
-        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
+        private readonly CentralLoggerContext db;
+
+        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage, CentralLoggerContext db)
+
         {
             this.text = text;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
+            this.db = db;
+        }
+        protected override async Task OnPostbackAsync(PostbackEvent ev)
+        {
+            switch (ev.Postback.Data)
+            {
+                case "Date":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date: " + ev.Postback.Params.Date);
+                    break;
+                case "Time":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the time: " + ev.Postback.Params.Time);
+                    break;
+                case "DateTime":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date-time: " + ev.Postback.Params.DateTime);
+                    break;
+                default:
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "Your postback is " + ev.Postback.Data);
+                    break;
+            }
         }
         protected override async Task OnPostbackAsync(PostbackEvent ev)
         {
@@ -59,6 +86,7 @@ namespace centralloggerbot
                 case EventMessageType.Sticker:
                     await ReplyRandomStickerAsync(ev.ReplyToken);
                     break;
+
             }
         }
         private async Task ReplyRandomStickerAsync(string replyToken)
