@@ -19,6 +19,7 @@ namespace centralloggerbot
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
         private string text;
+        private string userId;
 
         public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
@@ -44,8 +45,7 @@ namespace centralloggerbot
                         "You chose the date-time: " + ev.Postback.Params.DateTime);
                     break;
                 default:
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "Your postback is " + ev.Postback.Data);
+                    await SendLineDb(userId, ev.Postback.Data);
                     break;
             }
         }
@@ -87,6 +87,7 @@ namespace centralloggerbot
             var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
 
             var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+            this.userId = null;
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
@@ -176,13 +177,13 @@ namespace centralloggerbot
                     }
                 };
             }
-            if (userMessage == "carousel")
+            if (userMessage == "sub")
             {
                 List<ITemplateAction> actions2 = new List<ITemplateAction>();
 
                 var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
                 var client = new HttpClient();
-
+                this.userId = userId;
                 var response = await client.GetAsync(url);
                 var data = await response.Content.ReadAsStringAsync();
                 var json = JsonConvert.DeserializeObject<string[]>(data);
@@ -190,14 +191,13 @@ namespace centralloggerbot
                 foreach (var appName in json)
                 {
                     actions2.Add(new PostbackTemplateAction(appName, appName, appName));
-
                 }
 
 
                 replyMessage = new TemplateMessage("Button Template",
                     new CarouselTemplate(new List<CarouselColumn> {
-                        new CarouselColumn("Casousel 1 Text", "https://github.com/apple-touch-icon.png",
-                        "Casousel 1 Title", actions2)
+                        new CarouselColumn("กรุณาเลือกแอปพลิเคชั่นที่ต้องการติดตาม", "https://github.com/apple-touch-icon.png",
+                        "Choose application", actions2)
                     }));
             }
 
