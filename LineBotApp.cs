@@ -27,28 +27,6 @@ namespace centralloggerbot
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
         }
-        protected override async Task OnPostbackAsync(PostbackEvent ev)
-        {
-            switch (ev.Postback.Data)
-            {
-                case "Date":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the date: " + ev.Postback.Params.Date);
-                    break;
-                case "Time":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the time: " + ev.Postback.Params.Time);
-                    break;
-                case "DateTime":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the date-time: " + ev.Postback.Params.DateTime);
-                    break;
-                default:
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "Your postback is " + ev.Postback.Data);
-                    break;
-            }
-        }
         protected override async Task OnMessageAsync(MessageEvent ev)
         {
             switch (ev.Message.Type)
