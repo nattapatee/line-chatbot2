@@ -19,8 +19,6 @@ namespace centralloggerbot
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
         private string text;
-        private string userId;
-
         public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
             this.text = text;
@@ -49,7 +47,7 @@ namespace centralloggerbot
                 default:
                     await SendLineDb(ev.Source.UserId, ev.Postback.Data);
                     await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        $"{ev.Source.UserId}ขอบคุณที่สมัครข้อมูล{ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
+                        $"ขอบคุณที่สมัครแจ้งเตือนแอปพลิเคชั่น {ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด หากท่านต้องการยกเลิกติดตามให้พิมพ์ว่า \"unsub\" ขอบคุณครับ");
                     break;
             }
         }
@@ -93,11 +91,10 @@ namespace centralloggerbot
             var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
 
             var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-            userId = null;
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log!");
+            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log กรุณาพิมพ์คำว่า\"sub\"เพื่อเลือกแอปพลิเคชั่นที่ต้องการติดตาม หากท่านไม่ต้องการติดตามแล้วให้พิมพ์คำว่า \"unsub\" เพื่อยกเลิกการติดตาม");
 
             if (userMessage.ToLower() == "hello")
             {
