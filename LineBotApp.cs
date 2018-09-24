@@ -76,6 +76,18 @@ namespace centralloggerbot
                         new StickerMessage("1", stickerId)
                     });
         }
+        private async Task SendLineDb(string userId, string application)
+        {
+            var message = new
+            {
+                LineId = userId
+            };
+            var client = new HttpClient();
+            var data = JsonConvert.SerializeObject(message);
+            var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
+
+            var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+        }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
             ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log!");
@@ -84,11 +96,11 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("Hi!!");
             }
-            if (userMessage.ToLower() == "confirm")
+            if (userMessage.ToLower() == "sublist")
             {
                 replyMessage = new TemplateMessage("menu", new ButtonsTemplate(
-                        title: "\"menu\"",
-                        text: "Which burger you want to eat?",
+                        title: "\"Application List\"",
+                        text: "คุณต้องการติดตามแอปพลิเคชั่นไหน?",
                         actions: new List<ITemplateAction>(){
                             new MessageTemplateAction("Cheese Burger", "cheese"),
                             new MessageTemplateAction("Plain Burger","plain"),
@@ -105,49 +117,92 @@ namespace centralloggerbot
                 var text = userMessage.Split(' ')[1];
                 replyMessage = new TextMessage($"You say {text}");
             }
-            if (userMessage.ToLower() == "text")
+            if (userMessage.ToLower() == "applist")
             {
                 var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
                 var client = new HttpClient();
 
                 var response = await client.GetAsync(url);
                 var returnJson = await response.Content.ReadAsStringAsync();
+                var type = returnJson.GetType().ToString();
 
-                replyMessage = new TextMessage(returnJson);
-
+                replyMessage = new TextMessage(type + "\n" + returnJson);
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
                 replyMessage = new TextMessage("หวัดเด้");
             }
-            if (userMessage.ToLower() == "sub")
+            if (userMessage.ToLower() == "subtest")
             {
                 try
                 {
-                    var message = new
-                    {
-                        LineId = userId
-                    };
-                    var client = new HttpClient();
-                    var data = JsonConvert.SerializeObject(message);
-                    var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
-
-                    var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-                    if (response.IsSuccessStatusCode)
-                    {
-                        replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
-                    }
-                    else if ((int)response.StatusCode == 500)
-                    {
-                        replyMessage = new TextMessage("พบข้อผิดพลาดในการสมัครข้อมูล");
-
-                    }
+                    await SendLineDb(userId, null);
+                    replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                 }
                 catch (Exception)
                 {
                     replyMessage = new TextMessage($"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล");
                 }
             }
+            if (userMessage == "imagecarousel")
+            {
+                UriTemplateAction action = new UriTemplateAction("Uri Label", "https://github.com/kenakamu");
+
+                replyMessage = new TemplateMessage("ImageCarouselTemplate",
+                    new ImageCarouselTemplate(new List<ImageCarouselColumn> {
+                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
+                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
+                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
+                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
+                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action)
+                    }));
+            }
+            if (userMessage == "addrichmenu")
+            {
+                // Create Rich Menu
+                RichMenu richMenu = new RichMenu()
+                {
+                    Size = ImagemapSize.RichMenuLong,
+                    Selected = false,
+                    Name = "nice richmenu",
+                    ChatBarText = "touch me",
+                    Areas = new List<ActionArea>()
+                    {
+                        new ActionArea()
+                        {
+                            Bounds = new ImagemapArea(0,0 ,ImagemapSize.RichMenuLong.Width,ImagemapSize.RichMenuLong.Height),
+                            Action = new PostbackTemplateAction("ButtonA", "Menu A", "Menu A")
+                        }
+                    }
+                };
+            }
+            if (userMessage == "carousel")
+            {
+                List<ITemplateAction> actions1 = new List<ITemplateAction>();
+                List<ITemplateAction> actions2 = new List<ITemplateAction>();
+
+                // Add actions.
+                actions1.Add(new MessageTemplateAction("Message Label", "sample data"));
+                actions1.Add(new PostbackTemplateAction("Postback Label", "sample data", "sample data"));
+                actions1.Add(new UriTemplateAction("Uri Label", "https://github.com/kenakamu"));
+
+                // Add datetime picker actions
+                actions2.Add(new DateTimePickerTemplateAction("DateTime Picker", "DateTime",
+                    DateTimePickerMode.Datetime, "2017-07-21T13:00", null, null));
+                actions2.Add(new DateTimePickerTemplateAction("Date Picker", "Date",
+                    DateTimePickerMode.Date, "2017-07-21", null, null));
+                actions2.Add(new DateTimePickerTemplateAction("Time Picker", "Time",
+                    DateTimePickerMode.Time, "13:00", null, null));
+
+                replyMessage = new TemplateMessage("Button Template",
+                    new CarouselTemplate(new List<CarouselColumn> {
+                        new CarouselColumn("Casousel 1 Text", "https://github.com/apple-touch-icon.png",
+                        "Casousel 1 Title", actions1),
+                        new CarouselColumn("Casousel 1 Text", "https://github.com/apple-touch-icon.png",
+                        "Casousel 1 Title", actions2)
+                    }));
+            }
+
             if (userMessage.ToLower() == "unsub")
             {
                 try
