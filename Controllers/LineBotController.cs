@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
-using CentralLogger;
 
 namespace centralloggerbot.Controllers
 {
@@ -17,11 +16,8 @@ namespace centralloggerbot.Controllers
     {
         private static LineMessagingClient lineMessagingClient;
         AppSettings appsettings;
-        private readonly CentralLoggerContext db;
-
-        public LineBotController(IOptions<AppSettings> options, CentralLoggerContext db)
+        public LineBotController(IOptions<AppSettings> options)
         {
-            this.db = db;
             appsettings = options.Value;
             lineMessagingClient = new LineMessagingClient(appsettings.LineSettings.ChannelAccessToken);
         }
@@ -31,7 +27,7 @@ namespace centralloggerbot.Controllers
         /// Receive a message from a user and reply to it
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]JToken req, CentralLoggerContext db)
+        public async Task<IActionResult> Post([FromBody]JToken req)
         {
             var text = req.ToString();
             var events = WebhookEventParser.Parse(req.ToString());
@@ -39,7 +35,7 @@ namespace centralloggerbot.Controllers
             var blobStorage = await BlobStorage.CreateAsync(connectionString, "linebotcontainer");
             var eventSourceState = await TableStorage<EventSourceState>.CreateAsync(connectionString, "eventsourcestate");
 
-            var app = new LineBotApp(text, lineMessagingClient, eventSourceState, blobStorage, db);
+            var app = new LineBotApp(text, lineMessagingClient, eventSourceState, blobStorage);
             await app.RunAsync(events);
             return new OkResult();
         }

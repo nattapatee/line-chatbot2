@@ -10,7 +10,6 @@ using centralloggerbot.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using CentralLogger;
 
 namespace centralloggerbot
 {
@@ -19,17 +18,36 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
-        private readonly CentralLoggerContext db;
-
         private string text;
 
-        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage, CentralLoggerContext db)
+        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
-            this.db = db;
             this.text = text;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
+        }
+        protected override async Task OnPostbackAsync(PostbackEvent ev)
+        {
+            switch (ev.Postback.Data)
+            {
+                case "Date":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date: " + ev.Postback.Params.Date);
+                    break;
+                case "Time":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the time: " + ev.Postback.Params.Time);
+                    break;
+                case "DateTime":
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "You chose the date-time: " + ev.Postback.Params.DateTime);
+                    break;
+                default:
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "Your postback is " + ev.Postback.Data);
+                    break;
+            }
         }
         protected override async Task OnMessageAsync(MessageEvent ev)
         {
@@ -89,9 +107,7 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "text")
             {
-                var App = db.LogInfos.Select(m => m.Application).Distinct().ToList();
-
-                replyMessage = new TextMessage(App[0]);
+                replyMessage = new TextMessage(text);
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
