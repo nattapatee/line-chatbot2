@@ -78,7 +78,7 @@ namespace centralloggerbot
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            ISendMessage replyMessage = new TextMessage("");
+            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log!");
 
             if (userMessage.ToLower() == "hello")
             {
@@ -86,28 +86,15 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "confirm")
             {
-                RichMenu richMenu = new RichMenu()
-                {
-                    Size = ImagemapSize.RichMenuLong,
-                    Selected = false,
-                    Name = "nice richmenu",
-                    ChatBarText = "touch me",
-                    Areas = new List<ActionArea>()
-                    {
-                        new ActionArea()
-                        {
-                            Bounds = new ImagemapArea(0,0 ,ImagemapSize.RichMenuLong.Width,ImagemapSize.RichMenuLong.Height),
-                            Action = new PostbackTemplateAction("ButtonA", "Menu A", "Menu A")
-                        }
-                    }
-                };
-
-                var richMenuId = await messagingClient.CreateRichMenuAsync(richMenu);
-                var image = new MemoryStream(File.ReadAllBytes(@"https://thumbs.dreamstime.com/t/web-banner-marine-navy-blue-watercolor-gradient-fill-background-watercolour-stains-abstract-painted-template-paper-texture-110217861.jpg"));
-                // Upload Image
-                await messagingClient.UploadRichMenuPngImageAsync(image, richMenuId);
-                // Link to user
-                await messagingClient.LinkRichMenuToUserAsync(userId, richMenuId);
+                replyMessage = new TemplateMessage("menu", new ButtonsTemplate(
+                        title: "\"menu\"",
+                        text: "Which burger you want to eat?",
+                        actions: new List<ITemplateAction>(){
+                            new MessageTemplateAction("Cheese Burger", "cheese"),
+                            new MessageTemplateAction("Plain Burger","plain"),
+                            new MessageTemplateAction("Vegi Burger","vegi"),
+                            new MessageTemplateAction("Awesome Burger","awesome"),
+                        }));
             }
             if (userMessage.ToLower() == "message")
             {
