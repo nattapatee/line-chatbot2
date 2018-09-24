@@ -138,6 +138,7 @@ namespace centralloggerbot
             {
                 var App = db.LogInfos.Select(m => m.Application).Distinct().ToList();
                 replyMessage = new TextMessage(App[0]);
+
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
