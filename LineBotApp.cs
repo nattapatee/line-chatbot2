@@ -47,9 +47,9 @@ namespace centralloggerbot
                         "You chose the date-time: " + ev.Postback.Params.DateTime);
                     break;
                 default:
-                    await SendLineDb(userId, ev.Postback.Data);
+                    await SendLineDb(ev.Source.UserId, ev.Postback.Data);
                     await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        $"ขอบคุณที่สมัครข้อมูล{ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
+                        $"{ev.Source.UserId}ขอบคุณที่สมัครข้อมูล{ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                     break;
             }
         }
@@ -93,7 +93,7 @@ namespace centralloggerbot
             var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
 
             var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-            this.userId = null;
+            userId = null;
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
@@ -151,13 +151,12 @@ namespace centralloggerbot
                     replyMessage = new TextMessage($"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล");
                 }
             }
-            if (userMessage == "sub")
+            if (userMessage.ToLower() == "sub")
             {
                 List<ITemplateAction> actions2 = new List<ITemplateAction>();
 
                 var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
                 var client = new HttpClient();
-                this.userId = userId;
                 var response = await client.GetAsync(url);
                 var data = await response.Content.ReadAsStringAsync();
                 var json = JsonConvert.DeserializeObject<string[]>(data);
