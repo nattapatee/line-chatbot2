@@ -108,13 +108,12 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "text")
             {
                 var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
-                using (var client = new HttpClient())
-                {
-                    var response = await client.GetAsync(url);
-                    var returnJson = await response.Content.ReadAsStringAsync();
-                    var text = returnJson;
-                }
-                replyMessage = new TextMessage(text);
+                var client = new HttpClient();
+
+                var response = await client.GetAsync(url);
+                var returnJson = await response.Content.ReadAsStringAsync();
+
+                replyMessage = new TextMessage(returnJson);
 
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
