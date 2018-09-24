@@ -110,6 +110,7 @@ namespace centralloggerbot
 
             if (userMessage.ToLower() == "hello")
             {
+
                 replyMessage = new TextMessage("Hi!!");
             }
             if (userMessage.ToLower() == "confirm")
@@ -135,7 +136,8 @@ namespace centralloggerbot
             }
             if (userMessage.ToLower() == "text")
             {
-                replyMessage = new TextMessage(text);
+                var App = db.LogInfos.Select(m => m.Application).Distinct().ToList();
+                replyMessage = new TextMessage(App[0]);
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
