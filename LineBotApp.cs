@@ -85,7 +85,8 @@ namespace centralloggerbot
         {
             var message = new
             {
-                LineId = userId
+                LineId = userId,
+                ApplicationName = application
             };
             var client = new HttpClient();
             var data = JsonConvert.SerializeObject(message);
