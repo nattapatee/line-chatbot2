@@ -78,55 +78,40 @@ namespace centralloggerbot
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            var replyMessage = new TextMessage($"ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้ ถ้าหากคุณต้องการสมัครการแจ้งเตือน log ให้พิมพ์ว่า  \"sub\" และถ้าหากจะยกเลิกการติดตามให้พิมพ์  \"unsub\" ขอบคุณครับ ");
+            ISendMessage replyMessage = new TextMessage("");
+
             if (userMessage.ToLower() == "hello")
             {
-                replyMessage.Text = "Hi!!";
+                replyMessage = new TextMessage("Hi!!");
             }
-            if (userMessage == "addrichmenu")
+            if (userMessage.ToLower() == "confirm")
             {
-                // Create Rich Menu
-                RichMenu richMenu = new RichMenu()
-                {
-                    Size = ImagemapSize.RichMenuLong,
-                    Selected = false,
-                    Name = "nice richmenu",
-                    ChatBarText = "touch me",
-                    Areas = new List<ActionArea>()
-                    {
-                        new ActionArea()
-                        {
-                            Bounds = new ImagemapArea(0,0 ,ImagemapSize.RichMenuLong.Width,ImagemapSize.RichMenuLong.Height),
-                            Action = new PostbackTemplateAction("ButtonA", "Menu A", "Menu A")
-                        }
-                    }
-                };
-
-                var richMenuId = await messagingClient.CreateRichMenuAsync(richMenu);
-                var image = new MemoryStream(File.ReadAllBytes(@"Images\richmenu.PNG"));
-                // Upload Image
-                await messagingClient.UploadRichMenuPngImageAsync(image, richMenuId);
-                // Link to user
-                await messagingClient.LinkRichMenuToUserAsync(userId, richMenuId);
-
-                replyMessage = new TextMessage("Rich menu added");
+                replyMessage = new TemplateMessage("menu", new ButtonsTemplate(
+                        title: "\"menu\"",
+                        text: "Which burger you want to eat?",
+                        actions: new List<ITemplateAction>(){
+                            new MessageTemplateAction("Cheese Burger", "cheese"),
+                            new MessageTemplateAction("Plain Burger","plain"),
+                            new MessageTemplateAction("Vegi Burger","vegi"),
+                            new MessageTemplateAction("Awesome Burger","awesome"),
+                        }));
             }
             if (userMessage.ToLower() == "message")
             {
-                replyMessage.Text = $"You say{userMessage}";
+                replyMessage = new TextMessage($"You say{userMessage}");
             }
             if (userMessage.ToLower() == "sub app.dll")
             {
                 var text = userMessage.Split(' ')[1];
-                replyMessage.Text = $"You say {text}";
+                replyMessage = new TextMessage($"You say {text}");
             }
             if (userMessage.ToLower() == "text")
             {
-                replyMessage.Text = text;
+                replyMessage = new TextMessage(text);
             }
             if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
             {
-                replyMessage.Text = "หวัดเด้";
+                replyMessage = new TextMessage("หวัดเด้");
             }
             if (userMessage.ToLower() == "sub")
             {
@@ -145,17 +130,17 @@ namespace centralloggerbot
                     var response2 = await client.PostAsync(fullUrl2, new StringContent(data, Encoding.UTF8, "application/json"));
                     if (response.IsSuccessStatusCode)
                     {
-                        replyMessage.Text = $"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ";
+                        replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                     }
                     else if ((int)response.StatusCode == 500)
                     {
-                        replyMessage.Text = "พบข้อผิดพลาดในการสมัครข้อมูล";
+                        replyMessage = new TextMessage("พบข้อผิดพลาดในการสมัครข้อมูล");
 
                     }
                 }
                 catch (Exception)
                 {
-                    replyMessage.Text = $"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล";
+                    replyMessage = new TextMessage($"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล");
                 }
             }
             if (userMessage.ToLower() == "unsub")
@@ -172,17 +157,16 @@ namespace centralloggerbot
                     var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
                     if (response.IsSuccessStatusCode)
                     {
-                        replyMessage.Text = "เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ";
+                        replyMessage = new TextMessage("เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ");
                     }
                     else if ((int)response.StatusCode == 500)
                     {
-                        replyMessage.Text = "พบข้อผิดพลาดในการลบ";
-
+                        replyMessage = new TextMessage("พบข้อผิดพลาดในการลบ");
                     }
                 }
                 catch (Exception)
                 {
-                    replyMessage.Text = $"พบข้อผิดพลาดในการลบ กรุณาติดต่อผู้ดูแล";
+                    replyMessage = new TextMessage($"พบข้อผิดพลาดในการลบ กรุณาติดต่อผู้ดูแล");
                 }
 
             }
