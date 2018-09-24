@@ -30,6 +30,8 @@ namespace centralloggerbot
         }
         protected override async Task OnPostbackAsync(PostbackEvent ev)
         {
+            ISendMessage replyMessage = new TextMessage("");
+
             switch (ev.Postback.Data)
             {
                 case "Date":
@@ -46,6 +48,8 @@ namespace centralloggerbot
                     break;
                 default:
                     await SendLineDb(userId, ev.Postback.Data);
+                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
+                        "ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                     break;
             }
         }
@@ -60,6 +64,7 @@ namespace centralloggerbot
                     await ReplyRandomStickerAsync(ev.ReplyToken);
                     break;
             }
+
         }
         private async Task ReplyRandomStickerAsync(string replyToken)
         {
@@ -145,38 +150,6 @@ namespace centralloggerbot
                     replyMessage = new TextMessage($"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล");
                 }
             }
-            if (userMessage == "imagecarousel")
-            {
-                UriTemplateAction action = new UriTemplateAction("Uri Label", "https://github.com/kenakamu");
-
-                replyMessage = new TemplateMessage("ImageCarouselTemplate",
-                    new ImageCarouselTemplate(new List<ImageCarouselColumn> {
-                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
-                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
-                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
-                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action),
-                        new ImageCarouselColumn("https://github.com/apple-touch-icon.png", action)
-                    }));
-            }
-            if (userMessage == "addrichmenu")
-            {
-                // Create Rich Menu
-                RichMenu richMenu = new RichMenu()
-                {
-                    Size = ImagemapSize.RichMenuLong,
-                    Selected = false,
-                    Name = "nice richmenu",
-                    ChatBarText = "touch me",
-                    Areas = new List<ActionArea>()
-                    {
-                        new ActionArea()
-                        {
-                            Bounds = new ImagemapArea(0,0 ,ImagemapSize.RichMenuLong.Width,ImagemapSize.RichMenuLong.Height),
-                            Action = new PostbackTemplateAction("ButtonA", "Menu A", "Menu A")
-                        }
-                    }
-                };
-            }
             if (userMessage == "sub")
             {
                 List<ITemplateAction> actions2 = new List<ITemplateAction>();
@@ -190,13 +163,12 @@ namespace centralloggerbot
 
                 foreach (var appName in json)
                 {
-                    actions2.Add(new PostbackTemplateAction(appName, appName, appName));
+                    actions2.Add(new PostbackTemplateAction(appName, appName));
                 }
-
 
                 replyMessage = new TemplateMessage("Button Template",
                     new CarouselTemplate(new List<CarouselColumn> {
-                        new CarouselColumn("กรุณาเลือกแอปพลิเคชั่นที่ต้องการติดตาม", "https://github.com/apple-touch-icon.png",
+                        new CarouselColumn("กรุณาเลือกแอปพลิเคชั่นที่ต้องการติดตาม", "https://its.unl.edu/images/services/icons/AppDevelopmentD_Icon-01_0.png",
                         "Choose application", actions2)
                     }));
             }
