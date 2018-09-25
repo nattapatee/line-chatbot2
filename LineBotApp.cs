@@ -196,6 +196,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("แบร่");
             }
+            if (userMessage.Contains("หวัดดี") || userMessage.Contains("สวัสดี") || userMessage.Contains("ดี"))
+            {
+                replyMessage = new TextMessage("หวัดเด่ ไอ้น้อง");
+            }
             if (userMessage.Contains("ต่อย"))
             {
                 replyMessage = new TextMessage("หนูไม่สู้คน");
@@ -236,7 +240,7 @@ namespace centralloggerbot
 
                 replyMessage = new TextMessage(type + "\n" + returnJson);
             }
-            if (userMessage.ToLower() == "ชื่อไรอะ" || userMessage.ToLower() == "ชื่อไร" || userMessage.Contains("ชื่อ") || userMessage.ToLower() == "มึงใคร" || userMessage.ToLower() == "มึงเป็นใคร")
+            if (userMessage.ToLower() == "ชื่อไรอะ" || userMessage.Contains("ชื่อไร") || userMessage.Contains("ชื่อ") || userMessage.Contains("ใคร") || userMessage.ToLower() == "มึงเป็นใคร")
             {
                 replyMessage = new TextMessage("เซนทรัลลลล ล็อคเกอรรร์ ละเตงชื่อไร");
             }
