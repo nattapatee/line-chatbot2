@@ -136,9 +136,49 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("ดูนมน่อย");
             }
-            if (userMessage.ToLower() == "เคยตายไหม")
+            if (userMessage.Contains("โบ"))
             {
-                replyMessage = new TextMessage("แค่ ddos มาหนูก็ม๊องละค่ะ");
+                replyMessage = new TextMessage("คนตายไปแล้ว อย่าพูดถึง");
+            }
+            if (userMessage.Contains("บุ๊ค"))
+            {
+                replyMessage = new TextMessage("1+1 = 4 - ((1*100-(50*2)/2)/5) = เขา");
+            }
+            if (userMessage.Contains("ก้อง"))
+            {
+                replyMessage = new TextMessage("วันนี้แปรงฟันยัง");
+            }
+            if (userMessage.Contains("นัท"))
+            {
+                replyMessage = new TextMessage("ขี้โม้ๆๆๆๆๆๆ");
+            }
+            if (userMessage.Contains("เบส"))
+            {
+                replyMessage = new TextMessage("หมดเนื้อหมดตัวไปเท่ากับคำว่าเติมเกม");
+            }
+            if (userMessage.Contains("ตี๋"))
+            {
+                replyMessage = new TextMessage("Dev สุดหล่อ");
+            }
+            if (userMessage.Contains("เตอร์"))
+            {
+                replyMessage = new TextMessage("บอทนี้มันไม่ได้เขียน ด่าได้ 555555");
+            }
+            if (userMessage.Contains("ยิม"))
+            {
+                replyMessage = new TextMessage("หัวแตงโมจงเจริญ");
+            }
+            if (userMessage.Contains("ตาย"))
+            {
+                replyMessage = new TextMessage("แบร่");
+            }
+            if (userMessage.Contains("ต่อย"))
+            {
+                replyMessage = new TextMessage("หนูไม่สู้คน");
+            }
+            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า"))
+            {
+                replyMessage = new TextMessage("พ่อแม่สอนไม่ให้คบคนแบบนี้");
             }
             if (userMessage.ToLower() == "เสือก" || userMessage.ToLower() == "ไม่เสือก")
             {
