@@ -148,6 +148,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("วันนี้แปรงฟันยัง");
             }
+            if (userMessage.Contains("เศร้า"))
+            {
+                replyMessage = new TextMessage("ไม่ร้องๆ เบาๆเดี๋ยวข้างห้องได้ยิน");
+            }
             if (userMessage.Contains("นัท"))
             {
                 replyMessage = new TextMessage("ขี้โม้ๆๆๆๆๆๆ");
@@ -168,6 +172,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("Dev สุดหล่อ");
             }
+            if (userMessage.Contains("ต่อ"))
+            {
+                replyMessage = new TextMessage("ว่าไง ไอ้แว่น ต่อยกับกูป่าว");
+            }
             if (userMessage.Contains("ขำ"))
             {
                 replyMessage = new TextMessage("ไม่เสือก");
@@ -180,6 +188,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("หัวแตงโมจงเจริญ");
             }
+            if (userMessage.Contains("โสด") || userMessage.Contains("รัก") || userMessage.Contains("ชอบ"))
+            {
+                replyMessage = new TextMessage("สนใจเป็นแฟนกับบอทไหม");
+            }
             if (userMessage.Contains("ตาย"))
             {
                 replyMessage = new TextMessage("แบร่");
@@ -188,7 +200,7 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("หนูไม่สู้คน");
             }
-            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า") || userMessage.Contains("ควย"))
+            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า") || userMessage.Contains("ควย") || userMessage.Contains("เย็ด"))
             {
                 replyMessage = new TextMessage("พ่อแม่สอนไม่ให้คบคนแบบนี้");
             }
