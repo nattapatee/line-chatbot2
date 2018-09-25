@@ -100,17 +100,49 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("Hi!!");
             }
-            if (userMessage.ToLower() == "sublist")
+            if (userMessage.ToLower() == "วันนี้ฝนตกไหม")
             {
-                replyMessage = new TemplateMessage("menu", new ButtonsTemplate(
-                        title: "\"Application List\"",
-                        text: "คุณต้องการติดตามแอปพลิเคชั่นไหน?",
-                        actions: new List<ITemplateAction>(){
-                            new MessageTemplateAction("Cheese Burger", "cheese"),
-                            new MessageTemplateAction("Plain Burger","plain"),
-                            new MessageTemplateAction("Vegi Burger","vegi"),
-                            new MessageTemplateAction("Awesome Burger","awesome"),
-                        }));
+                replyMessage = new TextMessage("เปิดทีวีดูซิ ถามบอทบอทจะรู้ไหม");
+            }
+            if (userMessage.ToLower() == "วันนี้วันไร" || userMessage.ToLower() == "กี่โมงแล้ว")
+            {
+                replyMessage = new TextMessage("นี้บอท logger คิดว่าจะรู้ไหมน้อง");
+            }
+            if (userMessage.ToLower() == "วันนี้ฝนตกไหม")
+            {
+                replyMessage = new TextMessage("เปิดทีวีดูซิ ถามบอทบอทจะรู้ไหม");
+            }
+            if (userMessage.ToLower() == "จุฬ")
+            {
+                replyMessage = new TextMessage("อ้อ แฟนเก่าแอม");
+            }
+            if (userMessage.ToLower() == "ง่วง" || userMessage.ToLower() == "ง่วงจัง")
+            {
+                replyMessage = new TextMessage("มึงก็ไปนอนซะ!");
+            }
+            if (userMessage.ToLower() == "เหงา")
+            {
+                replyMessage = new TextMessage("หนูก็เหงา");
+            }
+            if (userMessage.ToLower() == "หิว" || userMessage.ToLower() == "หิวจัง")
+            {
+                replyMessage = new TextMessage("ก็แดกสิไอ้สัส");
+            }
+            if (userMessage.ToLower() == "ฝ้าย" || userMessage.ToLower() == "ฝ้ายคนสวย")
+            {
+                replyMessage = new TextMessage("ดูนมน่อย");
+            }
+            if (userMessage.ToLower() == "เคยตายไหม")
+            {
+                replyMessage = new TextMessage("แค่ ddos มาหนูก็ม๊องละค่ะ");
+            }
+            if (userMessage.ToLower() == "เสือก" || userMessage.ToLower() == "ไม่เสือก")
+            {
+                replyMessage = new TextMessage("มึงแหละเสือกมาคุยกับกูทำไม!");
+            }
+            if (userMessage.ToLower() == "ไอ้สัส" || userMessage.ToLower() == "อีสัส" || userMessage.ToLower() == "สัส" || userMessage.ToLower() == "เหี้ย")
+            {
+                replyMessage = new TextMessage("ด่าหนูทำไม หนูทำไรผิด");
             }
             if (userMessage.ToLower() == "message")
             {
@@ -132,9 +164,13 @@ namespace centralloggerbot
 
                 replyMessage = new TextMessage(type + "\n" + returnJson);
             }
-            if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
+            if (userMessage.ToLower() == "ชื่อไรอะ" || userMessage.ToLower() == "ชื่อไร" || userMessage.ToLower() == "ชื่อไรสัส" || userMessage.ToLower() == "มึงใคร" || userMessage.ToLower() == "มึงเป็นใคร")
             {
-                replyMessage = new TextMessage("หวัดเด้");
+                replyMessage = new TextMessage("เซนทรัลลลล ล็อคเกอรรร์ ละเตงชื่อไร");
+            }
+            if (userMessage.ToLower() == "พีพี")
+            {
+                replyMessage = new TextMessage("อ้อ อีโง่ ดักดาน เอาแต่ตัวเองนะอีแก่ ตักน้ำใส่กะโหลก ชะโงกดูเงาหัวตัวเองมั้ง สติลูก รู้จักไหม หืมมม");
             }
             if (userMessage.ToLower() == "subtest")
             {
