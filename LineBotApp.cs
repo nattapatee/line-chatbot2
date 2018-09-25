@@ -108,7 +108,7 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("เปิดแอร์จิ");
             }
-            if (userMessage.ToLower() == "วันนี้วันไร" || userMessage.ToLower() == "กี่โมงแล้ว")
+            if (userMessage.ToLower() == "วันนี้วันไร" || userMessage.ToLower() == "กี่โมงแล้ว" || userMessage.Contains("ทำไม"))
             {
                 replyMessage = new TextMessage("นี้บอท logger คิดว่าจะรู้ไหมน้อง");
             }
@@ -152,6 +152,14 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("ขี้โม้ๆๆๆๆๆๆ");
             }
+            if (userMessage.Contains("อิคึ") || userMessage.Contains("อิไต"))
+            {
+                replyMessage = new TextMessage("ยาเมะเตะะะะ");
+            }
+            if (userMessage.Contains("สร้าง") || userMessage.Contains("เจ้าของ") || userMessage.Contains("เกิด"))
+            {
+                replyMessage = new TextMessage("หนุ่มจืดที่หล่อที่สุด");
+            }
             if (userMessage.Contains("เบส"))
             {
                 replyMessage = new TextMessage("หมดเนื้อหมดตัวไปเท่ากับคำว่าเติมเกม");
@@ -159,6 +167,10 @@ namespace centralloggerbot
             if (userMessage.Contains("ตี๋"))
             {
                 replyMessage = new TextMessage("Dev สุดหล่อ");
+            }
+            if (userMessage.Contains("ขำ"))
+            {
+                replyMessage = new TextMessage("ไม่เสือก");
             }
             if (userMessage.Contains("เตอร์"))
             {
@@ -176,7 +188,7 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("หนูไม่สู้คน");
             }
-            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า"))
+            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า") || userMessage.Contains("ควย"))
             {
                 replyMessage = new TextMessage("พ่อแม่สอนไม่ให้คบคนแบบนี้");
             }
