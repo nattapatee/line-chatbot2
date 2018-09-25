@@ -118,7 +118,7 @@ namespace centralloggerbot
             }
             if (userMessage.Contains("ตาล"))
             {
-                replyMessage = new TextMessage("บู้ๆบ้าๆแบร่ๆบู้ดๆ ไอควายไอโง่ขยะทำงานใช้สมองบ้างกูเหนื่อยต้องมานั่งแก้ให้ทั้งหมดตลอด พูดใหม่ซิใครนะ");
+                replyMessage = new TextMessage("บู้ๆบ้าๆแบร่ๆบู้ดๆ ไอควายไอโง่ขยะทำงานใช้สมองบ้างกูเหนื่อยต้องมานั่งแก้ให้ทั้งหมดตลอด ท่ดๆ ระบบสงสัยรวน พูดใหม่ซิใครนะ");
             }
             if (userMessage.Contains("จุฬ"))
             {
