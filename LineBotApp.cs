@@ -94,7 +94,7 @@ namespace centralloggerbot
         }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log กรุณาพิมพ์คำว่า\"sub\"เพื่อเลือกแอปพลิเคชั่นที่ต้องการติดตาม หากท่านไม่ต้องการติดตามแล้วให้พิมพ์คำว่า \"unsub\" เพื่อยกเลิกการติดตาม");
+            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้ ถ้าคุณต้องการติดตาม log กรุณาพิมพ์คำว่า\"sub\"เพื่อเลือกแอปพลิเคชั่นที่ต้องการติดตาม หากท่านไม่ต้องการติดตามแล้วให้พิมพ์คำว่า \"unsub\" เพื่อยกเลิกการติดตาม");
 
             if (userMessage.ToLower() == "hello")
             {
@@ -116,13 +116,25 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("เขาทิ้งมึงไปแล้ว");
             }
+            if (userMessage.Contains("จริง") || userMessage.Contains("จิง"))
+            {
+                replyMessage = new TextMessage("ลองดูได้นะ");
+            }
             if (userMessage.Contains("ตาล"))
             {
                 replyMessage = new TextMessage("บู้ๆบ้าๆแบร่ๆบู้ดๆ ไอควายไอโง่ขยะทำงานใช้สมองบ้างกูเหนื่อยต้องมานั่งแก้ให้ทั้งหมดตลอด ท่ดๆ ระบบสงสัยรวน พูดใหม่ซิใครนะ");
             }
+            if (userMessage.Contains("โง่") || userMessage.Contains("ควาย"))
+            {
+                replyMessage = new TextMessage("บวกเลขให้เร็วเท่ากูก่อน");
+            }
             if (userMessage.Contains("จุฬ"))
             {
                 replyMessage = new TextMessage("อ้อ แฟนเก่าแอม");
+            }
+            if (userMessage.Contains("หล่อ"))
+            {
+                replyMessage = new TextMessage("Dev หล่อสุด");
             }
             if (userMessage.Contains("ง่วง") || userMessage.ToLower() == "ง่วงจัง")
             {
@@ -227,6 +239,10 @@ namespace centralloggerbot
             if (userMessage.ToLower() == "message")
             {
                 replyMessage = new TextMessage($"You say{userMessage}");
+            }
+            if (userMessage.Contains("สวย"))
+            {
+                replyMessage = new TextMessage("ตอแหลล");
             }
             if (userMessage.ToLower() == "sub app.dll")
             {
