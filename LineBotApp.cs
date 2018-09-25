@@ -116,6 +116,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("เขาทิ้งมึงไปแล้ว");
             }
+            if (userMessage.Contains("ตาล"))
+            {
+                replyMessage = new TextMessage("บู้ๆบ้าๆแบร่ๆบู้ดๆ ไอควายไอโง่ขยะทำงานใช้สมองบ้างกูเหนื่อยต้องมานั่งแก้ให้ทั้งหมดตลอด พูดใหม่ซิใครนะ");
+            }
             if (userMessage.Contains("จุฬ"))
             {
                 replyMessage = new TextMessage("อ้อ แฟนเก่าแอม");
