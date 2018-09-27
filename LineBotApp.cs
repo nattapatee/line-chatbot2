@@ -204,6 +204,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("ไหนนม??");
             }
+            if (userMessage.Contains("เอ") || userMessage.Contains("เพ"))
+            {
+                replyMessage = new TextMessage("ไม่นอนดูดนมอยู่บ้านหรอ??");
+            }
             if (userMessage.Contains("เตอร์"))
             {
                 replyMessage = new TextMessage("บอทนี้มันไม่ได้เขียน ด่าได้ 555555");
