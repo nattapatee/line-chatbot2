@@ -168,6 +168,10 @@ namespace centralloggerbot
             {
                 replyMessage = new TextMessage("ไม่ร้องๆ เบาๆเดี๋ยวข้างห้องได้ยิน");
             }
+            if (userMessage.Contains("อิอิ"))
+            {
+                replyMessage = new TextMessage("อิอิพ่อง");
+            }
             if (userMessage.Contains("นัท"))
             {
                 replyMessage = new TextMessage("ขี้โม้ๆๆๆๆๆๆ");
@@ -195,6 +199,10 @@ namespace centralloggerbot
             if (userMessage.Contains("ขำ"))
             {
                 replyMessage = new TextMessage("ไม่เสือก");
+            }
+            if (userMessage.Contains("มาย"))
+            {
+                replyMessage = new TextMessage("ไหนนม??");
             }
             if (userMessage.Contains("เตอร์"))
             {
