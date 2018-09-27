@@ -37,7 +37,7 @@ namespace centralloggerbot
             }
 
             Console.WriteLine($"ConnectionString = {connectionString}");
-            services.ConTest<AppSettings>(Configuration);
+            services.Corn<AppSettings>(Configuration);
             services.AddDbContext<CentralLoggerContext>(options => options.UseNpgsql(connectionString));
             services.AddMvc();
 
