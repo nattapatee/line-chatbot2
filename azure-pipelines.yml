@@ -7,8 +7,8 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
-- script: dotnet run --project centralloggerbot.csproj
-  displayName: 'Run'
+- script: dotnet build --project centralloggerbot.csproj
+  displayName: 'publish'
 
 - task: DotNetCoreInstaller@0
   inputs:
