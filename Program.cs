@@ -19,7 +19,7 @@ namespace centralloggerbot
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+                .UseStartup<Startups>()
                 .Build();
     }
 }
