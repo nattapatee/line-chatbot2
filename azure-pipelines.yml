@@ -8,7 +8,7 @@ pool:
 
 steps:
 - script: dotnet build --project centralloggerbot.csproj
-  displayName: 'publish'
+  displayName: 'build'
 
 - task: DotNetCoreInstaller@0
   inputs:
