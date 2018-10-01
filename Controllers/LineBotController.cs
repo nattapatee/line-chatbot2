@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using centralloggerbot.CloudStorage;
 using centralloggerbot.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace centralloggerbot.Controllers
 {
@@ -16,8 +17,11 @@ namespace centralloggerbot.Controllers
     {
         private static LineMessagingClient lineMessagingClient;
         AppSettings appsettings;
-        public LineBotController(IOptions<AppSettings> options)
+        readonly IConfiguration configuration;
+
+        public LineBotController(IConfiguration configuration, IOptions<AppSettings> options)
         {
+            this.configuration = configuration;
             appsettings = options.Value;
             lineMessagingClient = new LineMessagingClient(appsettings.LineSettings.ChannelAccessToken);
         }
@@ -35,7 +39,7 @@ namespace centralloggerbot.Controllers
             var blobStorage = await BlobStorage.CreateAsync(connectionString, "linebotcontainer");
             var eventSourceState = await TableStorage<EventSourceState>.CreateAsync(connectionString, "eventsourcestate");
 
-            var app = new LineBotApp(text, lineMessagingClient, eventSourceState, blobStorage);
+            var app = new LineBotApp(configuration, text, lineMessagingClient, eventSourceState, blobStorage);
             await app.RunAsync(events);
             return new OkResult();
         }

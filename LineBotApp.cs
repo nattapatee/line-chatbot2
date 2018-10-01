@@ -10,6 +10,7 @@ using centralloggerbot.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace centralloggerbot
 {
@@ -18,9 +19,12 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
+        readonly IConfiguration configuration;
+
         private string text;
-        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
+        public LineBotApp(IConfiguration configuration, string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
+            this.configuration = configuration;
             this.text = text;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
@@ -88,7 +92,7 @@ namespace centralloggerbot
             };
             var client = new HttpClient();
             var data = JsonConvert.SerializeObject(message);
-            var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
+            var fullUrl = configuration["FullUri"];
 
             var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
         }
