@@ -10,7 +10,7 @@ using centralloggerbot.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using CentralLogger;
+using Microsoft.Extensions.Configuration;
 
 namespace centralloggerbot
 {
@@ -19,21 +19,21 @@ namespace centralloggerbot
         private LineMessagingClient messagingClient { get; }
         private TableStorage<EventSourceState> sourceState { get; }
         private BlobStorage blobStorage { get; }
+        readonly IConfiguration configuration;
+
         private string text;
-
-        private readonly CentralLoggerContext db;
-
-        public LineBotApp(string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage, CentralLoggerContext db)
-
+        public LineBotApp(IConfiguration configuration, string text, LineMessagingClient lineMessagingClient, TableStorage<EventSourceState> tableStorage, BlobStorage blobStorage)
         {
+            this.configuration = configuration;
             this.text = text;
             this.messagingClient = lineMessagingClient;
             this.sourceState = tableStorage;
             this.blobStorage = blobStorage;
-            this.db = db;
         }
         protected override async Task OnPostbackAsync(PostbackEvent ev)
         {
+            ISendMessage replyMessage = new TextMessage("");
+
             switch (ev.Postback.Data)
             {
                 case "Date":
@@ -49,30 +49,9 @@ namespace centralloggerbot
                         "You chose the date-time: " + ev.Postback.Params.DateTime);
                     break;
                 default:
+                    await SendLineDb(ev.Source.UserId, ev.Postback.Data);
                     await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "Your postback is " + ev.Postback.Data);
-                    break;
-            }
-        }
-        protected override async Task OnPostbackAsync(PostbackEvent ev)
-        {
-            switch (ev.Postback.Data)
-            {
-                case "Date":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the date: " + ev.Postback.Params.Date);
-                    break;
-                case "Time":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the time: " + ev.Postback.Params.Time);
-                    break;
-                case "DateTime":
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "You chose the date-time: " + ev.Postback.Params.DateTime);
-                    break;
-                default:
-                    await messagingClient.ReplyMessageAsync(ev.ReplyToken,
-                        "Your postback is " + ev.Postback.Data);
+                        $"ขอบคุณที่สมัครแจ้งเตือนแอปพลิเคชั่น {ev.Postback.Data} เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด หากท่านต้องการยกเลิกติดตามให้พิมพ์ว่า \"unsub\" ขอบคุณครับ");
                     break;
             }
         }
@@ -86,8 +65,8 @@ namespace centralloggerbot
                 case EventMessageType.Sticker:
                     await ReplyRandomStickerAsync(ev.ReplyToken);
                     break;
-
             }
+
         }
         private async Task ReplyRandomStickerAsync(string replyToken)
         {
@@ -104,73 +83,241 @@ namespace centralloggerbot
                         new StickerMessage("1", stickerId)
                     });
         }
+        private async Task SendLineDb(string userId, string application)
+        {
+            var message = new
+            {
+                LineId = userId,
+                ApplicationName = application
+            };
+            var client = new HttpClient();
+            var data = JsonConvert.SerializeObject(message);
+            var fullUrl = configuration["FullUri"];
+
+            var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+        }
         private async Task HandleTextAsync(string replyToken, string userMessage, string userId)
         {
-            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้้ ถ้าคุณต้องการติดตาม log!");
+            ISendMessage replyMessage = new TextMessage("ขอบคุณสำหรับข้อความ! ขออภัย เราไม่สามารถตอบกลับผู้ใช้ เป็นส่วนตัวได้จากบัญชีนี้ ถ้าคุณต้องการติดตาม log กรุณาพิมพ์คำว่า\"sub\"เพื่อเลือกแอปพลิเคชั่นที่ต้องการติดตาม หากท่านไม่ต้องการติดตามแล้วให้พิมพ์คำว่า \"unsub\" เพื่อยกเลิกการติดตาม");
 
             if (userMessage.ToLower() == "hello")
             {
                 replyMessage = new TextMessage("Hi!!");
             }
-            if (userMessage.ToLower() == "confirm")
+            if (userMessage.ToLower() == "วันนี้ฝนตกไหม")
             {
-                replyMessage = new TemplateMessage("menu", new ButtonsTemplate(
-                        title: "\"menu\"",
-                        text: "Which burger you want to eat?",
-                        actions: new List<ITemplateAction>(){
-                            new MessageTemplateAction("Cheese Burger", "cheese"),
-                            new MessageTemplateAction("Plain Burger","plain"),
-                            new MessageTemplateAction("Vegi Burger","vegi"),
-                            new MessageTemplateAction("Awesome Burger","awesome"),
-                        }));
+                replyMessage = new TextMessage("เปิดทีวีดูซิ ถามบอทบอทจะรู้ไหม");
+            }
+            if (userMessage.Contains("ร้อน"))
+            {
+                replyMessage = new TextMessage("เปิดแอร์จิ");
+            }
+            if (userMessage.ToLower() == "วันนี้วันไร" || userMessage.ToLower() == "กี่โมงแล้ว" || userMessage.Contains("ทำไม"))
+            {
+                replyMessage = new TextMessage("นี้บอท logger คิดว่าจะรู้ไหมน้อง");
+            }
+            if (userMessage.Contains("แอม"))
+            {
+                replyMessage = new TextMessage("เขาทิ้งมึงไปแล้ว");
+            }
+            if (userMessage.Contains("จริง") || userMessage.Contains("จิง"))
+            {
+                replyMessage = new TextMessage("ลองดูได้นะ");
+            }
+            if (userMessage.Contains("ตาล"))
+            {
+                replyMessage = new TextMessage("บู้ๆบ้าๆแบร่ๆบู้ดๆ ไอควายไอโง่ขยะทำงานใช้สมองบ้างกูเหนื่อยต้องมานั่งแก้ให้ทั้งหมดตลอด ท่ดๆ ระบบสงสัยรวน พูดใหม่ซิใครนะ");
+            }
+            if (userMessage.Contains("โง่") || userMessage.Contains("ควาย"))
+            {
+                replyMessage = new TextMessage("บวกเลขให้เร็วเท่ากูก่อน");
+            }
+            if (userMessage.Contains("จุฬ"))
+            {
+                replyMessage = new TextMessage("อ้อ แฟนเก่าแอม");
+            }
+            if (userMessage.Contains("หล่อ"))
+            {
+                replyMessage = new TextMessage("Dev หล่อสุด");
+            }
+            if (userMessage.Contains("ง่วง") || userMessage.ToLower() == "ง่วงจัง")
+            {
+                replyMessage = new TextMessage("มึงก็ไปนอนซะ!");
+            }
+            if (userMessage.Contains("เหงา"))
+            {
+                replyMessage = new TextMessage("หนูก็เหงา");
+            }
+            if (userMessage.Contains("หิว") || userMessage.ToLower() == "หิวจัง")
+            {
+                replyMessage = new TextMessage("ก็แดกสิไอ้สัส");
+            }
+            if (userMessage.Contains("ฝ้าย"))
+            {
+                replyMessage = new TextMessage("ดูนมน่อย");
+            }
+            if (userMessage.Contains("โบ"))
+            {
+                replyMessage = new TextMessage("คนตายไปแล้ว อย่าพูดถึง");
+            }
+            if (userMessage.Contains("บุ๊ค"))
+            {
+                replyMessage = new TextMessage("1+1 = 4 - ((1*100-(50*2)/2)/5) = เขา");
+            }
+            if (userMessage.Contains("ก้อง"))
+            {
+                replyMessage = new TextMessage("วันนี้แปรงฟันยัง");
+            }
+            if (userMessage.Contains("เศร้า"))
+            {
+                replyMessage = new TextMessage("ไม่ร้องๆ เบาๆเดี๋ยวข้างห้องได้ยิน");
+            }
+            if (userMessage.Contains("อิอิ"))
+            {
+                replyMessage = new TextMessage("อิอิพ่อง");
+            }
+            if (userMessage.Contains("นัท"))
+            {
+                replyMessage = new TextMessage("ขี้โม้ๆๆๆๆๆๆ");
+            }
+            if (userMessage.Contains("อิคึ") || userMessage.Contains("อิไต"))
+            {
+                replyMessage = new TextMessage("ยาเมะเตะะะะ");
+            }
+            if (userMessage.Contains("สร้าง") || userMessage.Contains("เจ้าของ") || userMessage.Contains("เกิด"))
+            {
+                replyMessage = new TextMessage("หนุ่มจืดที่หล่อที่สุด");
+            }
+            if (userMessage.Contains("เบส"))
+            {
+                replyMessage = new TextMessage("หมดเนื้อหมดตัวไปเท่ากับคำว่าเติมเกม");
+            }
+            if (userMessage.Contains("ตี๋"))
+            {
+                replyMessage = new TextMessage("Dev สุดหล่อ");
+            }
+            if (userMessage.Contains("ต่อ"))
+            {
+                replyMessage = new TextMessage("ว่าไง ไอ้แว่น ต่อยกับกูป่าว");
+            }
+            if (userMessage.Contains("ขำ"))
+            {
+                replyMessage = new TextMessage("ไม่เสือก");
+            }
+            if (userMessage.Contains("มาย"))
+            {
+                replyMessage = new TextMessage("ไหนนม??");
+            }
+            if (userMessage.Contains("เอ") || userMessage.Contains("เพ"))
+            {
+                replyMessage = new TextMessage("ไม่นอนดูดนมอยู่บ้านหรอ??");
+            }
+            if (userMessage.Contains("เตอร์"))
+            {
+                replyMessage = new TextMessage("บอทนี้มันไม่ได้เขียน ด่าได้ 555555");
+            }
+            if (userMessage.Contains("ยิม"))
+            {
+                replyMessage = new TextMessage("หัวแตงโมจงเจริญ");
+            }
+            if (userMessage.Contains("โสด") || userMessage.Contains("รัก") || userMessage.Contains("ชอบ"))
+            {
+                replyMessage = new TextMessage("สนใจเป็นแฟนกับบอทไหม");
+            }
+            if (userMessage.Contains("ตาย"))
+            {
+                replyMessage = new TextMessage("แบร่");
+            }
+            if (userMessage.Contains("หวัดดี") || userMessage.Contains("สวัสดี") || userMessage.Contains("ดี"))
+            {
+                replyMessage = new TextMessage("หวัดเด่ ไอ้น้อง");
+            }
+            if (userMessage.Contains("ต่อย"))
+            {
+                replyMessage = new TextMessage("หนูไม่สู้คน");
+            }
+            if (userMessage.Contains("เบียร์") || userMessage.Contains("เหล้า") || userMessage.Contains("ควย") || userMessage.Contains("เย็ด"))
+            {
+                replyMessage = new TextMessage("พ่อแม่สอนไม่ให้คบคนแบบนี้");
+            }
+            if (userMessage.ToLower() == "เสือก" || userMessage.ToLower() == "ไม่เสือก")
+            {
+                replyMessage = new TextMessage("มึงแหละเสือกมาคุยกับกูทำไม!");
+            }
+            if (userMessage.ToLower() == "ไอ้สัส" || userMessage.ToLower() == "อีสัส" || userMessage.Contains("สัส") || userMessage.Contains("เหี้ย"))
+            {
+                replyMessage = new TextMessage("ด่าหนูทำไม หนูทำไรผิด");
+            }
+            if (userMessage.Contains("โหด") || userMessage.Contains("55"))
+            {
+                replyMessage = new TextMessage("55555555555555555555555555");
             }
             if (userMessage.ToLower() == "message")
             {
                 replyMessage = new TextMessage($"You say{userMessage}");
+            }
+            if (userMessage.Contains("สวย"))
+            {
+                replyMessage = new TextMessage("ตอแหลล");
             }
             if (userMessage.ToLower() == "sub app.dll")
             {
                 var text = userMessage.Split(' ')[1];
                 replyMessage = new TextMessage($"You say {text}");
             }
-            if (userMessage.ToLower() == "text")
+            if (userMessage.ToLower() == "applist")
             {
-                replyMessage = new TextMessage(text);
+                var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
+                var client = new HttpClient();
+
+                var response = await client.GetAsync(url);
+                var returnJson = await response.Content.ReadAsByteArrayAsync();
+                var type = returnJson.GetType().ToString();
+
+                replyMessage = new TextMessage(type + "\n" + returnJson);
             }
-            if (userMessage.ToLower() == "หวัดดี" || userMessage.ToLower() == "สวัสดี")
+            if (userMessage.ToLower() == "ชื่อไรอะ" || userMessage.Contains("ชื่อไร") || userMessage.Contains("ชื่อ") || userMessage.Contains("ใคร") || userMessage.ToLower() == "มึงเป็นใคร")
             {
-                replyMessage = new TextMessage("หวัดเด้");
+                replyMessage = new TextMessage("เซนทรัลลลล ล็อคเกอรรร์ ละเตงชื่อไร");
             }
-            if (userMessage.ToLower() == "sub")
+            if (userMessage.ToLower() == ".พีพี")
+            {
+                replyMessage = new TextMessage("อ้อ อีโง่ ดักดาน เอาแต่ตัวเองนะอีแก่ ตักน้ำใส่กะโหลก ชะโงกดูเงาหัวตัวเองมั้ง สติลูก รู้จักไหม หืมมม");
+            }
+            if (userMessage.ToLower() == "subtest")
             {
                 try
                 {
-                    var message = new
-                    {
-                        LineId = userId
-                    };
-                    var client = new HttpClient();
-                    var data = JsonConvert.SerializeObject(message);
-                    var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/AddLine";
-                    var fullUrl2 = $"http://central-logger.azurewebsites.net/api/line/AddLine";
-
-                    var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
-                    var response2 = await client.PostAsync(fullUrl2, new StringContent(data, Encoding.UTF8, "application/json"));
-                    if (response.IsSuccessStatusCode)
-                    {
-                        replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
-                    }
-                    else if ((int)response.StatusCode == 500)
-                    {
-                        replyMessage = new TextMessage("พบข้อผิดพลาดในการสมัครข้อมูล");
-
-                    }
+                    await SendLineDb(userId, null);
+                    replyMessage = new TextMessage($"ขอบคุณที่สมัครข้อมูล เมื่อเราตรวจพบ Critical เราแจ้งเตือนหาท่านให้เร็วที่สุด ขอบคุณครับ");
                 }
                 catch (Exception)
                 {
                     replyMessage = new TextMessage($"พบข้อผิดพลาดในการสมัครข้อมูล กรุณาติดต่อผู้ดูแล");
                 }
             }
+            if (userMessage.ToLower() == "sub")
+            {
+                List<ITemplateAction> actions2 = new List<ITemplateAction>();
+
+                var url = "http://centralloggerazure.azurewebsites.net/api/Logger/GetAllApp";
+                var client = new HttpClient();
+                var response = await client.GetAsync(url);
+                var data = await response.Content.ReadAsStringAsync();
+                var json = JsonConvert.DeserializeObject<string[]>(data);
+
+                foreach (var appName in json)
+                {
+                    actions2.Add(new PostbackTemplateAction(appName, appName));
+                }
+
+                replyMessage = new TemplateMessage("Button Template",
+                    new CarouselTemplate(new List<CarouselColumn> {
+                        new CarouselColumn("กรุณาเลือกแอปพลิเคชั่นที่ต้องการติดตาม", "https://its.unl.edu/images/services/icons/AppDevelopmentD_Icon-01_0.png",
+                        "Choose application", actions2)
+                    }));
+            }
+
             if (userMessage.ToLower() == "unsub")
             {
                 try
@@ -181,8 +328,13 @@ namespace centralloggerbot
                     };
                     var client = new HttpClient();
                     var data = JsonConvert.SerializeObject(message);
-                    var fullUrl = $"https://centralloggerazure.azurewebsites.net/api/line/DeleteLine";
-                    var response = await client.PostAsync(fullUrl, new StringContent(data, Encoding.UTF8, "application/json"));
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri("https://centralloggerazure.azurewebsites.net/api/line/DeleteLine"),
+                        Content = new StringContent(data, Encoding.UTF8, "application/json")
+                    };
+                    var response = await client.SendAsync(request);
                     if (response.IsSuccessStatusCode)
                     {
                         replyMessage = new TextMessage("เราได้ยกเลิกการแจ้งเตือน log เรียบร้อยแล้ว ขอบคุณครับ");

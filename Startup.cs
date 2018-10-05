@@ -37,10 +37,10 @@ namespace centralloggerbot
             }
 
             Console.WriteLine($"ConnectionString = {connectionString}");
-
-            services.AddMvc();
             services.Configure<AppSettings>(Configuration);
             services.AddDbContext<CentralLoggerContext>(options => options.UseNpgsql(connectionString));
+            services.AddMvc();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
